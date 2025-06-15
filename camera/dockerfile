@@ -1,0 +1,46 @@
+# (1) ベースイメージに gocv/opencv:4.11.0（ARM64プラットフォーム指定）を利用
+FROM --platform=linux/arm64 gocv/opencv:4.9.0 AS base
+
+LABEL maintainer="YourName <your_email@example.com>"
+
+# (2) Goのバージョンを指定（例：go1.24.2 for ARM64）
+#     gocv/opencv:4.11.0 にはデフォルトで Go が含まれていないため、手動インストールします。
+#     apt リポジトリに存在するgoより公式バイナリの方がバージョンが新しい場合が多いので、
+#     ここでは公式バイナリをwgetしてインストールする例を示します。
+
+# ARG GO_VERSION=1.24.2
+# ARG GO_ARCH=arm64
+# ENV GO_VERSION=${GO_VERSION}
+# ENV GO_ARCH=${GO_ARCH}
+
+# # (3) 必要なパッケージをインストール & Go バイナリをダウンロード
+# RUN apt-get update && \
+#     apt-get install -y --no-install-recommends \
+#         wget ca-certificates && \
+#     rm -rf /var/lib/apt/lists/*
+
+# # (4) Go公式バイナリをインストール
+# RUN cd /tmp && \
+#     wget https://go.dev/dl/go${GO_VERSION}.linux-${GO_ARCH}.tar.gz && \
+#     tar -C /usr/local -xzf go${GO_VERSION}.linux-${GO_ARCH}.tar.gz && \
+#     rm go${GO_VERSION}.linux-${GO_ARCH}.tar.gz
+
+# # (5) Go のパスを通す
+# ENV GOPATH=/go
+# ENV PATH="/usr/local/go/bin:${GOPATH}/bin:${PATH}"
+
+# (6) アプリケーション用の作業ディレクトリを作成
+WORKDIR /app
+
+# (7) ソースコードをコピー（例：main.goや go.mod / go.sum など）
+#     ここではローカルのファイルをすべてコピーする例
+COPY . /app
+
+# (8) 依存関係をダウンロード（go.mod / go.sum がある場合）
+RUN go mod download
+
+# (9) ビルド
+RUN go build -o myapp main.go
+
+# (10) 実行コマンド
+CMD ["./myapp"]
