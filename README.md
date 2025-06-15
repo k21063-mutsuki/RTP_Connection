@@ -20,6 +20,6 @@ UDPとRTPパケットを用いた通信機能．RTPパケットの生成や解�
 ①サーバ側のサービスを起動コマンドによって起動  
 ②クライアント側のサービスを起動コマンドによって起動  
 〜具体例〜  
-①cameraフォルダのmain.goをgo run main.go <ip1>,<port2>,node_<ID1>により起動  
-②scratchdetectionフォルダのmain.goをgo run main.go <ip2>,<port2>,node_<ID2>  <ip1>,<port1>,node_<ID1>により起動  
+①cameraフォルダのmain.goをgo run main.go 127.0.0.1,9000,node_1により起動  
+②scratchdetectionフォルダのmain.goをgo run main.go 127.0.0.1,9001,node_2  127.0.0.1,9000,node_1により起動  
 これによりcameraで撮影したWebカエラの映像をscratchdetectionでエッジ検出し出力することが可能（適度な閾値の調整が必要）  
